@@ -14,443 +14,194 @@
     --maths: #f0c040;
     --physics: #40a8f0;
     --chem: #50e0a0;
-    --red: #ff4444;
     --text: #f0f0f0;
     --muted: #666;
     --exam-date: #ff6b35;
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Instrument Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
-
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Instrument Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; opacity:0.4; }
+  .container { max-width:1100px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
 
   /* HEADER */
-  header {
-    border-bottom: 1px solid var(--border);
-    padding: 28px 0 20px;
-    position: sticky;
-    top: 0;
-    background: rgba(10,10,10,0.95);
-    backdrop-filter: blur(12px);
-    z-index: 100;
-  }
+  header { border-bottom:1px solid var(--border); padding:24px 0 18px; position:sticky; top:0; background:rgba(10,10,10,0.96); backdrop-filter:blur(12px); z-index:100; }
+  .header-inner { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .logo { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:3px; }
+  .logo span { color:var(--maths); }
+  .countdown-pill { background:var(--surface2); border:1px solid var(--exam-date); border-radius:100px; padding:8px 20px; font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--exam-date); display:flex; align-items:center; gap:8px; }
+  .countdown-pill .dot { width:6px; height:6px; background:var(--exam-date); border-radius:50%; animation:pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
 
-  .header-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
+  /* STATS */
+  .overall-section { padding:36px 0 28px; border-bottom:1px solid var(--border); }
+  .section-label { font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:18px; }
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:24px; }
+  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px; position:relative; overflow:hidden; }
+  .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .stat-card.maths::before { background:var(--maths); }
+  .stat-card.physics::before { background:var(--physics); }
+  .stat-card.chem::before { background:var(--chem); }
+  .stat-card.overall::before { background:linear-gradient(90deg,var(--maths),var(--physics),var(--chem)); }
+  .stat-value { font-family:'Bebas Neue',sans-serif; font-size:2.6rem; line-height:1; margin-bottom:4px; }
+  .stat-card.maths .stat-value { color:var(--maths); }
+  .stat-card.physics .stat-value { color:var(--physics); }
+  .stat-card.chem .stat-value { color:var(--chem); }
+  .overall-bar { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 22px; display:flex; align-items:center; gap:18px; }
+  .bar-label { font-family:'DM Mono',monospace; font-size:0.75rem; color:var(--muted); white-space:nowrap; }
+  .bar-track { flex:1; height:8px; background:var(--border); border-radius:100px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--maths),var(--physics),var(--chem)); transition:width 0.8s cubic-bezier(0.4,0,0.2,1); }
+  .bar-pct { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; }
+  .stat-label { font-size:0.75rem; color:var(--muted); font-weight:500; }
 
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 3px;
-    color: var(--text);
-  }
+  /* TABS */
+  .week-section { padding:28px 0; }
+  .tabs { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+  .tab { font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; padding:7px 16px; border-radius:100px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:all 0.2s; }
+  .tab:hover { border-color:#444; color:var(--text); }
+  .tab.active { background:var(--text); color:var(--bg); border-color:var(--text); font-weight:600; }
+  .week-panel { display:none; }
+  .week-panel.active { display:block; }
 
-  .logo span { color: var(--maths); }
+  /* MOTIVE BAR */
+  .motive-bar { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--maths); border-radius:10px; padding:14px 18px; margin-bottom:24px; font-size:0.85rem; color:#aaa; font-style:italic; line-height:1.5; }
+  .motive-bar strong { color:var(--maths); font-style:normal; }
 
-  .countdown-pill {
-    background: var(--surface2);
-    border: 1px solid var(--exam-date);
-    border-radius: 100px;
-    padding: 8px 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--exam-date);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .countdown-pill .dot {
-    width: 6px; height: 6px;
-    background: var(--exam-date);
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-  }
-
-  /* OVERALL PROGRESS */
-  .overall-section {
-    padding: 40px 0 32px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-  }
-
-  .stat-card.maths::before { background: var(--maths); }
-  .stat-card.physics::before { background: var(--physics); }
-  .stat-card.chem::before { background: var(--chem); }
-  .stat-card.overall::before { background: linear-gradient(90deg, var(--maths), var(--physics), var(--chem)); }
-
-  .stat-value {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.8rem;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .stat-card.maths .stat-value { color: var(--maths); }
-  .stat-card.physics .stat-value { color: var(--physics); }
-  .stat-card.chem .stat-value { color: var(--chem); }
-  .stat-card.overall .stat-value { color: var(--text); }
-
-  .stat-label { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
-
-  .overall-bar {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .bar-label { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
-  .bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 100px; overflow: hidden; }
-  .bar-fill {
-    height: 100%;
-    border-radius: 100px;
-    background: linear-gradient(90deg, var(--maths), var(--physics), var(--chem));
-    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .bar-pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--text); }
-
-  /* WEEK TABS */
-  .week-section { padding: 32px 0; }
-
-  .tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-  }
-
-  .tab {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 1px;
-    padding: 8px 16px;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .tab:hover { border-color: #444; color: var(--text); }
-  .tab.active { background: var(--text); color: var(--bg); border-color: var(--text); font-weight: 500; }
-
-  /* WEEK CONTENT */
-  .week-panel { display: none; }
-  .week-panel.active { display: block; }
-
-  .week-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .week-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 2px; }
-  .week-focus { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
-
-  .week-progress-ring {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .ring-label { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); text-align: right; }
-  .ring-pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--text); }
-
-  /* DAYS GRID */
-  .days-grid { display: flex; flex-direction: column; gap: 12px; }
-
-  .day-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-
-  .day-card:hover { border-color: #333; }
-  .day-card.completed { border-color: #2a2a2a; }
-  .day-card.today { border-color: var(--maths); }
-
-  .day-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    cursor: pointer;
-    gap: 16px;
-  }
-
-  .day-left { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
-
-  .day-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    color: var(--muted);
-    min-width: 40px;
-    line-height: 1;
-  }
-
-  .day-card.today .day-num { color: var(--maths); }
-
-  .day-info { flex: 1; min-width: 0; }
-  .day-name { font-weight: 600; font-size: 0.9rem; }
-  .day-date { font-size: 0.75rem; color: var(--muted); font-family: 'DM Mono', monospace; }
-
-  .day-subjects { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
-
-  .subj-tag {
-    font-size: 0.65rem;
-    font-family: 'DM Mono', monospace;
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-
-  .subj-tag.m { background: rgba(240,192,64,0.15); color: var(--maths); }
-  .subj-tag.p { background: rgba(64,168,240,0.15); color: var(--physics); }
-  .subj-tag.c { background: rgba(80,224,160,0.15); color: var(--chem); }
-
-  .day-actions { display: flex; align-items: center; gap: 10px; }
-
-  .complete-btn {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    background: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-
-  .complete-btn:hover { border-color: var(--chem); }
-  .complete-btn.done { background: var(--chem); border-color: var(--chem); }
-  .complete-btn svg { width: 14px; height: 14px; }
-
-  .chevron {
-    color: var(--muted);
-    transition: transform 0.3s;
-    font-size: 1rem;
-    flex-shrink: 0;
-  }
-
-  .day-card.open .chevron { transform: rotate(180deg); }
+  /* DAY CARDS */
+  .days-grid { display:flex; flex-direction:column; gap:10px; }
+  .day-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:border-color 0.2s; }
+  .day-card:hover { border-color:#333; }
+  .day-card.today { border-color:var(--maths); }
+  .day-card.review-day { border-color:#333; }
+  .day-header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; cursor:pointer; gap:14px; }
+  .day-left { display:flex; align-items:center; gap:14px; flex:1; min-width:0; }
+  .day-num { font-family:'Bebas Neue',sans-serif; font-size:1.7rem; color:var(--muted); min-width:38px; line-height:1; }
+  .day-card.today .day-num { color:var(--maths); }
+  .day-card.review-day .day-num { color:#a78bfa; }
+  .day-info { flex:1; min-width:0; }
+  .day-name { font-weight:600; font-size:0.88rem; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .day-date { font-size:0.72rem; color:var(--muted); font-family:'DM Mono',monospace; margin-top:2px; }
+  .day-subjects { display:flex; gap:5px; flex-wrap:wrap; margin-top:5px; }
+  .subj-tag { font-size:0.62rem; font-family:'DM Mono',monospace; padding:2px 8px; border-radius:100px; font-weight:500; letter-spacing:0.5px; }
+  .subj-tag.m { background:rgba(240,192,64,0.15); color:var(--maths); }
+  .subj-tag.p { background:rgba(64,168,240,0.15); color:var(--physics); }
+  .subj-tag.c { background:rgba(80,224,160,0.15); color:var(--chem); }
+  .subj-tag.quiz { background:rgba(167,139,250,0.15); color:#a78bfa; }
+  .day-actions { display:flex; align-items:center; gap:10px; }
+  .complete-btn { width:30px; height:30px; border-radius:50%; border:2px solid var(--border); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; }
+  .complete-btn:hover { border-color:var(--chem); }
+  .complete-btn.done { background:var(--chem); border-color:var(--chem); }
+  .complete-btn svg { width:13px; height:13px; }
+  .chevron { color:var(--muted); transition:transform 0.3s; font-size:0.9rem; flex-shrink:0; }
+  .day-card.open .chevron { transform:rotate(180deg); }
 
   /* DAY TASKS */
-  .day-tasks {
-    display: none;
-    padding: 0 20px 20px;
-    border-top: 1px solid var(--border);
-  }
-
-  .day-card.open .day-tasks { display: block; }
-
-  .tasks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 16px; }
-
-  .subject-block { background: var(--surface2); border-radius: 10px; padding: 16px; }
-
-  .subject-block-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .subject-block-title.m { color: var(--maths); }
-  .subject-block-title.p { color: var(--physics); }
-  .subject-block-title.c { color: var(--chem); }
-
-  .task-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 6px 0;
-    font-size: 0.82rem;
-    line-height: 1.4;
-    color: #ccc;
-  }
-
-  .task-check {
-    width: 16px; height: 16px;
-    border-radius: 4px;
-    border: 1.5px solid var(--border);
-    background: transparent;
-    cursor: pointer;
-    flex-shrink: 0;
-    margin-top: 1px;
-    transition: all 0.15s;
-    appearance: none;
-    -webkit-appearance: none;
-    position: relative;
-  }
-
-  .task-check:checked { background: var(--chem); border-color: var(--chem); }
-  .task-check:checked::after {
-    content: '✓';
-    position: absolute;
-    top: -1px; left: 1px;
-    font-size: 11px;
-    color: #000;
-    font-weight: 700;
-  }
-
-  .task-text { flex: 1; }
-  .task-text.done { text-decoration: line-through; color: var(--muted); }
-
-  .hours-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    background: var(--border);
-    padding: 2px 6px;
-    border-radius: 4px;
-    white-space: nowrap;
-    margin-top: 1px;
-    flex-shrink: 0;
-  }
+  .day-tasks { display:none; padding:0 18px 18px; border-top:1px solid var(--border); }
+  .day-card.open .day-tasks { display:block; }
+  .tasks-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; margin-top:14px; }
+  .subject-block { background:var(--surface2); border-radius:10px; padding:14px; }
+  .subject-block-title { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; padding-bottom:7px; border-bottom:1px solid var(--border); }
+  .subject-block-title.m { color:var(--maths); }
+  .subject-block-title.p { color:var(--physics); }
+  .subject-block-title.c { color:var(--chem); }
+  .task-item { display:flex; align-items:flex-start; gap:8px; padding:5px 0; font-size:0.8rem; line-height:1.4; color:#ccc; }
+  .task-check { width:15px; height:15px; border-radius:4px; border:1.5px solid var(--border); background:transparent; cursor:pointer; flex-shrink:0; margin-top:2px; transition:all 0.15s; appearance:none; -webkit-appearance:none; position:relative; }
+  .task-check:checked { background:var(--chem); border-color:var(--chem); }
+  .task-check:checked::after { content:'✓'; position:absolute; top:-1px; left:1px; font-size:10px; color:#000; font-weight:700; }
+  .task-text.done { text-decoration:line-through; color:var(--muted); }
 
   /* NOTES */
-  .day-notes { margin-top: 12px; }
-  .notes-label { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 1px; margin-bottom: 6px; }
-  .notes-input {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-family: 'Instrument Sans', sans-serif;
-    font-size: 0.82rem;
-    color: var(--text);
-    resize: vertical;
-    min-height: 60px;
-    transition: border-color 0.2s;
-  }
-  .notes-input:focus { outline: none; border-color: #444; }
-  .notes-input::placeholder { color: var(--muted); }
+  .day-notes { margin-top:10px; }
+  .notes-label { font-size:0.68rem; color:var(--muted); font-family:'DM Mono',monospace; letter-spacing:1px; margin-bottom:5px; }
+  .notes-input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:9px 11px; font-family:'Instrument Sans',sans-serif; font-size:0.8rem; color:var(--text); resize:vertical; min-height:56px; transition:border-color 0.2s; }
+  .notes-input:focus { outline:none; border-color:#444; }
+  .notes-input::placeholder { color:var(--muted); }
 
-  /* TODAY BADGE */
-  .today-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    background: var(--maths);
-    color: #000;
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
+  /* BADGES */
+  .today-badge { font-family:'DM Mono',monospace; font-size:0.58rem; background:var(--maths); color:#000; padding:2px 7px; border-radius:100px; font-weight:700; letter-spacing:1px; }
+  .review-badge { font-family:'DM Mono',monospace; font-size:0.58rem; background:#a78bfa; color:#000; padding:2px 7px; border-radius:100px; font-weight:700; letter-spacing:1px; }
 
-  /* MOTIVATION BAR */
-  .motive-bar {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--maths);
-    border-radius: 10px;
-    padding: 16px 20px;
-    margin-bottom: 28px;
-    font-size: 0.85rem;
-    color: #aaa;
-    font-style: italic;
-    line-height: 1.5;
-  }
+  /* ============================
+     QUIZ SECTION
+  ============================ */
+  .quiz-section { margin-top:16px; background:linear-gradient(135deg,rgba(167,139,250,0.06),rgba(167,139,250,0.02)); border:1px solid rgba(167,139,250,0.25); border-radius:12px; padding:20px; }
+  .quiz-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+  .quiz-title { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:2px; color:#a78bfa; }
+  .quiz-subtitle { font-size:0.75rem; color:var(--muted); margin-top:2px; font-family:'DM Mono',monospace; }
+  .start-quiz-btn { font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; background:#a78bfa; color:#000; border:none; border-radius:100px; padding:10px 22px; cursor:pointer; font-weight:600; transition:all 0.2s; white-space:nowrap; }
+  .start-quiz-btn:hover { background:#c4b5fd; transform:translateY(-1px); }
+  .start-quiz-btn:disabled { background:#333; color:var(--muted); cursor:not-allowed; transform:none; }
 
-  .motive-bar strong { color: var(--maths); font-style: normal; }
+  /* QUIZ MODAL */
+  .quiz-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:999; overflow-y:auto; padding:24px; }
+  .quiz-modal.open { display:flex; align-items:flex-start; justify-content:center; }
+  .quiz-box { background:var(--surface); border:1px solid rgba(167,139,250,0.3); border-radius:20px; width:100%; max-width:700px; margin:auto; padding:32px; }
+  .quiz-box-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+  .quiz-box-title { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:2px; color:#a78bfa; }
+  .close-quiz { background:transparent; border:1px solid var(--border); color:var(--muted); border-radius:100px; padding:6px 14px; cursor:pointer; font-family:'DM Mono',monospace; font-size:0.72rem; transition:all 0.2s; }
+  .close-quiz:hover { border-color:#555; color:var(--text); }
 
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 24px 0;
-    text-align: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
+  /* LOADING */
+  .quiz-loading { text-align:center; padding:48px 0; }
+  .spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:#a78bfa; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .loading-text { font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--muted); }
+
+  /* QUESTION */
+  .quiz-progress-bar { height:3px; background:var(--border); border-radius:100px; margin-bottom:24px; overflow:hidden; }
+  .quiz-progress-fill { height:100%; background:#a78bfa; border-radius:100px; transition:width 0.4s ease; }
+  .quiz-meta { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--muted); margin-bottom:12px; display:flex; justify-content:space-between; }
+  .quiz-subject-tag { padding:2px 10px; border-radius:100px; font-size:0.65rem; font-weight:600; }
+  .quiz-subject-tag.Maths { background:rgba(240,192,64,0.2); color:var(--maths); }
+  .quiz-subject-tag.Physics { background:rgba(64,168,240,0.2); color:var(--physics); }
+  .quiz-subject-tag.Chemistry { background:rgba(80,224,160,0.2); color:var(--chem); }
+  .question-text { font-size:1rem; font-weight:600; line-height:1.5; margin-bottom:20px; color:var(--text); }
+  .options-grid { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+  .option-btn { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 16px; text-align:left; color:var(--text); cursor:pointer; font-size:0.85rem; font-family:'Instrument Sans',sans-serif; transition:all 0.2s; line-height:1.4; }
+  .option-btn:hover:not(:disabled) { border-color:#a78bfa; background:rgba(167,139,250,0.08); }
+  .option-btn.correct { background:rgba(80,224,160,0.15); border-color:var(--chem); color:var(--chem); }
+  .option-btn.wrong { background:rgba(255,68,68,0.1); border-color:#ff4444; color:#ff6666; }
+  .option-btn.reveal { background:rgba(80,224,160,0.08); border-color:rgba(80,224,160,0.4); color:var(--chem); }
+  .option-btn:disabled { cursor:default; }
+  .explanation { background:var(--surface2); border-left:3px solid #a78bfa; border-radius:0 8px 8px 0; padding:12px 14px; font-size:0.82rem; color:#bbb; line-height:1.5; margin-bottom:16px; }
+  .explanation strong { color:#a78bfa; }
+  .next-btn { font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; background:#a78bfa; color:#000; border:none; border-radius:100px; padding:10px 24px; cursor:pointer; font-weight:600; transition:all 0.2s; }
+  .next-btn:hover { background:#c4b5fd; }
+
+  /* RESULTS */
+  .quiz-results { text-align:center; padding:16px 0; }
+  .result-score { font-family:'Bebas Neue',sans-serif; font-size:5rem; line-height:1; margin-bottom:8px; }
+  .result-label { font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--muted); letter-spacing:2px; margin-bottom:24px; }
+  .result-breakdown { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:24px; }
+  .result-sub { background:var(--surface2); border-radius:10px; padding:14px; }
+  .result-sub-score { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; }
+  .result-sub-score.m { color:var(--maths); }
+  .result-sub-score.p { color:var(--physics); }
+  .result-sub-score.c { color:var(--chem); }
+  .result-sub-label { font-size:0.7rem; color:var(--muted); font-family:'DM Mono',monospace; }
+  .result-msg { font-size:0.9rem; color:#bbb; margin-bottom:24px; line-height:1.5; }
+  .retake-btn { font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; background:transparent; color:#a78bfa; border:1px solid #a78bfa; border-radius:100px; padding:10px 24px; cursor:pointer; font-weight:600; transition:all 0.2s; margin-right:10px; }
+  .retake-btn:hover { background:rgba(167,139,250,0.1); }
+
+  /* QUIZ HISTORY */
+  .quiz-history { margin-top:12px; }
+  .quiz-history-title { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
+  .quiz-attempt { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--surface2); border-radius:8px; margin-bottom:6px; font-size:0.78rem; }
+  .attempt-score { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:#a78bfa; }
+  .attempt-date { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); }
 
   /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
-  @media (max-width: 600px) {
-    .logo { font-size: 1.5rem; }
-    .stat-value { font-size: 2rem; }
-    .week-title { font-size: 1.6rem; }
-    .tasks-grid { grid-template-columns: 1fr; }
+  footer { border-top:1px solid var(--border); padding:20px 0; text-align:center; font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--muted); letter-spacing:1px; }
+
+  @media(max-width:600px) {
+    .logo { font-size:1.5rem; }
+    .stat-value { font-size:2rem; }
+    .tasks-grid { grid-template-columns:1fr; }
+    .result-breakdown { grid-template-columns:repeat(3,1fr); }
+    .quiz-box { padding:20px; }
   }
 </style>
 </head>
@@ -469,219 +220,156 @@
 </header>
 
 <div class="container">
-
-  <!-- OVERALL STATS -->
   <section class="overall-section">
     <div class="section-label">// Overall Progress</div>
     <div class="stats-grid">
-      <div class="stat-card maths">
-        <div class="stat-value" id="maths-pct">0%</div>
-        <div class="stat-label">Maths (80 marks)</div>
-      </div>
-      <div class="stat-card physics">
-        <div class="stat-value" id="physics-pct">0%</div>
-        <div class="stat-label">Physics (70 marks)</div>
-      </div>
-      <div class="stat-card chem">
-        <div class="stat-value" id="chem-pct">0%</div>
-        <div class="stat-label">Chemistry (70 marks)</div>
-      </div>
-      <div class="stat-card overall">
-        <div class="stat-value" id="overall-pct">0%</div>
-        <div class="stat-label">Days Completed</div>
-      </div>
+      <div class="stat-card maths"><div class="stat-value" id="maths-pct">0%</div><div class="stat-label">Maths (80 marks)</div></div>
+      <div class="stat-card physics"><div class="stat-value" id="physics-pct">0%</div><div class="stat-label">Physics (70 marks)</div></div>
+      <div class="stat-card chem"><div class="stat-value" id="chem-pct">0%</div><div class="stat-label">Chemistry (70 marks)</div></div>
+      <div class="stat-card overall"><div class="stat-value" id="overall-pct">0/56</div><div class="stat-label">Days Completed</div></div>
     </div>
     <div class="overall-bar">
-      <div class="bar-label">TOTAL JOURNEY</div>
+      <div class="bar-label">JOURNEY</div>
       <div class="bar-track"><div class="bar-fill" id="total-bar" style="width:0%"></div></div>
       <div class="bar-pct" id="total-pct">0%</div>
     </div>
   </section>
 
-  <!-- WEEK TABS -->
   <section class="week-section">
     <div class="section-label">// Weekly Breakdown</div>
-
-    <div class="tabs" id="tabs">
-      <button class="tab active" onclick="showWeek(0)">Week 1</button>
-      <button class="tab" onclick="showWeek(1)">Week 2</button>
-      <button class="tab" onclick="showWeek(2)">Week 3</button>
-      <button class="tab" onclick="showWeek(3)">Week 4</button>
-      <button class="tab" onclick="showWeek(4)">Week 5</button>
-      <button class="tab" onclick="showWeek(5)">Week 6</button>
-      <button class="tab" onclick="showWeek(6)">Week 7</button>
-      <button class="tab" onclick="showWeek(7)">Week 8</button>
-    </div>
-
+    <div class="tabs" id="tabs"></div>
     <div id="week-panels"></div>
   </section>
 </div>
 
 <footer>
-  <div class="container">
-    EXAM DATE: 15 JULY 2026 &nbsp;·&nbsp; TARGET: 80/80 + 70/70 + 70/70 &nbsp;·&nbsp; YOU GOT THIS BRO 💪
-  </div>
+  <div class="container">EXAM DATE: 15 JULY 2026 &nbsp;·&nbsp; TARGET: 80/80 + 70/70 + 70/70 &nbsp;·&nbsp; YOU GOT THIS BRO 💪</div>
 </footer>
+
+<!-- QUIZ MODAL -->
+<div class="quiz-modal" id="quizModal">
+  <div class="quiz-box">
+    <div class="quiz-box-header">
+      <div class="quiz-box-title" id="quizModalTitle">WEEK REVIEW QUIZ</div>
+      <button class="close-quiz" onclick="closeQuiz()">✕ CLOSE</button>
+    </div>
+    <div id="quizContent"></div>
+  </div>
+</div>
 
 <script>
 // ============================================================
-// DATA
+// WEEK DATA
 // ============================================================
 const EXAM_DATE = new Date('2026-07-15T00:00:00');
-const START_DATE = new Date('2026-05-19');
 
 const weeks = [
   {
-    title: "WEEK 1",
-    focus: "Foundation — Learn from scratch, no rush",
-    days: [
-      {
-        name: "Day 1", date: "Mon May 19",
-        tasks: {
-          m: ["Relations & Functions: types of relations — reflexive, symmetric, transitive", "One-one and onto functions with examples", "Do 10 practice problems"],
-          p: ["Electric Charges & Fields: Coulomb's law", "Electric field lines and superposition", "Solve 5 numericals"],
-          c: ["Mole concept and molar mass", "Stoichiometry basics", "Laws of chemical combination"]
-        }
-      },
-      {
-        name: "Day 2", date: "Tue May 20",
-        tasks: {
-          m: ["Inverse Trigonometric Functions: domain and range", "Principal value branch", "Graph of sin⁻¹, cos⁻¹, tan⁻¹"],
-          p: ["Electrostatic Potential & Capacitance", "Electric potential energy", "Capacitors in series and parallel"],
-          c: ["Empirical and molecular formula", "Percentage composition", "Solve 10 stoichiometry problems"]
-        }
-      },
-      {
-        name: "Day 3", date: "Wed May 21",
-        tasks: {
-          m: ["Matrices: types, addition, multiplication", "Transpose and properties", "Do NCERT exercise 3.1 & 3.2"],
-          p: ["Gauss's Law and applications", "Conductors in electric field", "Revision of Unit 1 so far"],
-          c: ["Structure of Atom: Bohr's model", "Quantum numbers explained", "Shapes of orbitals s, p, d"]
-        }
-      },
-      {
-        name: "Day 4", date: "Thu May 22",
-        tasks: {
-          m: ["Determinants: properties and cofactors", "Inverse of a matrix", "Solve NCERT examples"],
-          p: ["Current Electricity: Ohm's law, resistivity", "Kirchhoff's laws (KVL & KCL)", "Series and parallel circuits"],
-          c: ["Electronic configuration: Aufbau principle", "Hund's rule and Pauli exclusion", "Write configs of first 30 elements"]
-        }
-      },
-      {
-        name: "Day 5", date: "Fri May 23",
-        tasks: {
-          m: ["Continuity & Differentiability: limits review", "Continuity at a point and interval", "Chain rule derivation"],
-          p: ["Wheatstone bridge and potentiometer", "Resistance and temperature", "5 numericals on circuits"],
-          c: ["Periodic table: trends in ionization energy", "Electronegativity and atomic radius", "Periodicity patterns"]
-        }
-      },
-      {
-        name: "Day 6", date: "Sat May 24",
-        tasks: {
-          m: ["Derivatives: product rule, quotient rule", "Implicit differentiation", "15 derivative practice problems"],
-          p: ["Moving Charges: Biot-Savart law", "Ampere's circuital law", "Force on current-carrying conductor"],
-          c: ["Chemical Bonding: ionic and covalent", "VSEPR theory and shapes", "Polarity of molecules"]
-        }
-      },
-      {
-        name: "Day 7 — REVIEW", date: "Sun May 25",
-        tasks: {
-          m: ["Redo all wrong problems from Week 1", "Make a formula sheet", "Test yourself without notes"],
-          p: ["Write all formulas on one page", "Explain Gauss's law in your own words", "Revise numericals you struggled with"],
-          c: ["Summary sheet: all reactions and definitions", "Recite periodic trends from memory", "Quick quiz yourself"]
-        }
-      }
+    title:"WEEK 1", focus:"Foundation — Learn from scratch, no rush",
+    topics: {
+      m:["Relations and Functions","Inverse Trigonometric Functions","Matrices","Determinants","Continuity and Differentiability","Derivatives"],
+      p:["Electric Charges and Fields","Electrostatic Potential and Capacitance","Current Electricity","Moving Charges and Magnetism"],
+      c:["Basic Concepts of Chemistry","Mole concept and Stoichiometry","Structure of Atom","Periodic Table Trends","Chemical Bonding"]
+    },
+    days:[
+      {name:"Day 1",date:"Mon May 19",tasks:{m:["Relations & Functions: types — reflexive, symmetric, transitive","One-one and onto functions with examples","Do 10 practice problems"],p:["Electric Charges & Fields: Coulomb's law","Electric field lines and superposition","Solve 5 numericals"],c:["Mole concept and molar mass","Stoichiometry basics","Laws of chemical combination"]}},
+      {name:"Day 2",date:"Tue May 20",tasks:{m:["Inverse Trig Functions: domain and range","Principal value branch","Graphs of sin⁻¹, cos⁻¹, tan⁻¹"],p:["Electrostatic Potential & Capacitance","Electric potential energy","Capacitors in series and parallel"],c:["Empirical and molecular formula","Percentage composition","Solve 10 stoichiometry problems"]}},
+      {name:"Day 3",date:"Wed May 21",tasks:{m:["Matrices: types, addition, multiplication","Transpose and properties","Do NCERT exercise 3.1 & 3.2"],p:["Gauss's Law and applications","Conductors in electric field","Revision of Unit 1 so far"],c:["Structure of Atom: Bohr's model","Quantum numbers explained","Shapes of orbitals s, p, d"]}},
+      {name:"Day 4",date:"Thu May 22",tasks:{m:["Determinants: properties and cofactors","Inverse of a matrix","Solve NCERT examples"],p:["Current Electricity: Ohm's law, resistivity","Kirchhoff's laws (KVL & KCL)","Series and parallel circuits"],c:["Electronic configuration: Aufbau principle","Hund's rule and Pauli exclusion","Write configs of first 30 elements"]}},
+      {name:"Day 5",date:"Fri May 23",tasks:{m:["Continuity & Differentiability: limits review","Continuity at a point and interval","Chain rule derivation"],p:["Wheatstone bridge and potentiometer","Resistance and temperature","5 numericals on circuits"],c:["Periodic table: trends in ionization energy","Electronegativity and atomic radius","Periodicity patterns"]}},
+      {name:"Day 6",date:"Sat May 24",tasks:{m:["Derivatives: product rule, quotient rule","Implicit differentiation","15 derivative practice problems"],p:["Moving Charges: Biot-Savart law","Ampere's circuital law","Force on current-carrying conductor"],c:["Chemical Bonding: ionic and covalent","VSEPR theory and shapes","Polarity of molecules"]}},
+      {name:"Day 7 — REVIEW",date:"Sun May 25",isReview:true,tasks:{m:["Redo all wrong problems from Week 1","Make a formula sheet","Test yourself without notes"],p:["Write all formulas on one page","Explain Gauss's law in your own words","Revise numericals you struggled with"],c:["Summary sheet: all reactions and definitions","Recite periodic trends from memory","Quick quiz yourself"]}}
     ]
   },
   {
-    title: "WEEK 2",
-    focus: "Build deeper — More Calculus, Magnetism, Bonding",
-    days: [
-      { name: "Day 8", date: "Mon May 26", tasks: { m: ["Application of Derivatives: increasing/decreasing functions", "Maxima and minima (local & global)", "10 problems on optimization"], p: ["Magnetism and Matter: bar magnets", "Earth's magnetism and magnetic elements", "Magnetic properties of materials"], c: ["Chemical Bonding continued: hybridization sp, sp2, sp3", "Hydrogen bonding and van der Waals", "Molecular orbital theory basics"] } },
-      { name: "Day 9", date: "Tue May 27", tasks: { m: ["Integrals: introduction and basic formulas", "Integration by substitution", "20 basic integration problems"], p: ["Electromagnetic Induction: Faraday's laws", "Lenz's law and motional EMF", "5 numericals"], c: ["Thermodynamics: system and surroundings", "Internal energy, enthalpy, work done by gas", "First law of thermodynamics"] } },
-      { name: "Day 10", date: "Wed May 28", tasks: { m: ["Integration by parts method", "Definite integrals and properties", "15 mixed integration problems"], p: ["Mutual induction and self induction", "Energy stored in inductor", "AC vs DC concepts"], c: ["Thermodynamics: entropy and second law", "Gibb's free energy and spontaneity", "Hess's law and problems"] } },
-      { name: "Day 11", date: "Thu May 29", tasks: { m: ["Area under curves using integration", "Application problems", "NCERT examples on area"], p: ["Alternating Current: RMS and peak values", "LCR circuit and impedance", "Resonance frequency"], c: ["Equilibrium: physical and chemical equilibrium", "Le Chatelier's principle", "Kp and Kc expressions"] } },
-      { name: "Day 12", date: "Fri May 30", tasks: { m: ["Differential Equations: order and degree", "Variable separable method", "Homogeneous differential equations"], p: ["Power in AC circuits, power factor", "Transformers and their working", "Solve 5 AC circuit problems"], c: ["Ionic equilibrium: Kw, pH, pOH", "Buffer solutions", "Common ion effect"] } },
-      { name: "Day 13", date: "Sat May 31", tasks: { m: ["Vectors: types, addition, dot product", "Cross product and applications", "Vector problems from NCERT"], p: ["Electromagnetic Waves: Maxwell's equations", "Nature and properties of EM waves", "Spectrum chart from radio to gamma"], c: ["Redox Reactions: oxidation number rules", "Balancing redox reactions by half-reaction", "Types of redox reactions"] } },
-      { name: "Day 14 — REVIEW", date: "Sun Jun 1", tasks: { m: ["Full Week 2 topic revision", "Make integration formula sheet", "Solve 10 mixed problems"], p: ["Revise all Unit 3 & 4 formulas", "Self-quiz on EM induction", "Attempt 1 chapter test"], c: ["Revise thermodynamics laws from memory", "Equilibrium practice problems", "Weekly summary sheet"] } }
+    title:"WEEK 2", focus:"Build deeper — Calculus, Magnetism, Thermodynamics",
+    topics:{m:["Application of Derivatives","Integration by substitution","Integration by parts","Definite integrals","Differential Equations","Vectors"],p:["Magnetism and Matter","Electromagnetic Induction","Faraday's laws","Alternating Current","Electromagnetic Waves"],c:["Chemical Bonding hybridization","Thermodynamics laws","Gibbs free energy","Chemical Equilibrium","Ionic Equilibrium","Redox Reactions"]},
+    days:[
+      {name:"Day 8",date:"Mon May 26",tasks:{m:["Application of Derivatives: increasing/decreasing","Maxima and minima","10 optimization problems"],p:["Magnetism: bar magnets, Earth's magnetism","Magnetic properties of materials","Diamagnetic, paramagnetic, ferromagnetic"],c:["Hybridization: sp, sp2, sp3","Hydrogen bonding and van der Waals","Molecular orbital theory basics"]}},
+      {name:"Day 9",date:"Tue May 27",tasks:{m:["Integrals: introduction and basic formulas","Integration by substitution","20 basic integration problems"],p:["EM Induction: Faraday's laws","Lenz's law and motional EMF","5 numericals"],c:["Thermodynamics: system, internal energy, enthalpy","Work done by gas","First law of thermodynamics"]}},
+      {name:"Day 10",date:"Wed May 28",tasks:{m:["Integration by parts method","Definite integrals and properties","15 mixed integration problems"],p:["Mutual and self induction","Energy stored in inductor","AC vs DC concepts"],c:["Entropy and second law","Gibb's free energy and spontaneity","Hess's law and problems"]}},
+      {name:"Day 11",date:"Thu May 29",tasks:{m:["Area under curves using integration","Application problems","NCERT examples on area"],p:["Alternating Current: RMS and peak values","LCR circuit and impedance","Resonance frequency"],c:["Equilibrium: physical and chemical","Le Chatelier's principle","Kp and Kc expressions"]}},
+      {name:"Day 12",date:"Fri May 30",tasks:{m:["Differential Equations: order and degree","Variable separable method","Homogeneous differential equations"],p:["Power in AC circuits, power factor","Transformers and their working","Solve 5 AC circuit problems"],c:["Ionic equilibrium: Kw, pH, pOH","Buffer solutions","Common ion effect"]}},
+      {name:"Day 13",date:"Sat May 31",tasks:{m:["Vectors: types, addition, dot product","Cross product and applications","Vector problems from NCERT"],p:["Electromagnetic Waves: Maxwell's equations","Nature and properties of EM waves","Spectrum from radio to gamma"],c:["Redox Reactions: oxidation number rules","Balancing redox by half-reaction method","Types of redox reactions"]}},
+      {name:"Day 14 — REVIEW",date:"Sun Jun 1",isReview:true,tasks:{m:["Full Week 2 topic revision","Make integration formula sheet","Solve 10 mixed problems"],p:["Revise all Unit 3 & 4 formulas","Self-quiz on EM induction","Attempt 1 chapter test"],c:["Revise thermodynamics laws from memory","Equilibrium practice problems","Weekly summary sheet"]}}
     ]
   },
   {
-    title: "WEEK 3",
-    focus: "Push harder — Optics, 3D Geometry, Organic Chem",
-    days: [
-      { name: "Day 15", date: "Mon Jun 2", tasks: { m: ["3D Geometry: direction cosines and ratios", "Equation of a line in 3D", "Angle between two lines"], p: ["Ray Optics: reflection at curved surfaces", "Mirror formula and magnification", "10 mirror numericals"], c: ["Organic Chemistry: tetravalency of carbon", "Hybridization in organic compounds", "IUPAC nomenclature basics"] } },
-      { name: "Day 16", date: "Tue Jun 3", tasks: { m: ["Plane in 3D: equation forms", "Distance of point from plane", "Angle between line and plane"], p: ["Refraction: Snell's law, critical angle, TIR", "Refraction at spherical surfaces", "Lens formula and power"], c: ["IUPAC nomenclature: alkanes, alkenes, alkynes", "Functional groups naming", "Practice 20 naming problems"] } },
-      { name: "Day 17", date: "Wed Jun 4", tasks: { m: ["3D Geometry problems: NCERT examples", "Skew lines and shortest distance", "Practice 10 problems"], p: ["Optical instruments: microscope, telescope", "Resolving power and magnifying power", "Numerical problems"], c: ["Isomerism: structural and stereoisomerism", "Geometric isomerism (cis/trans)", "Optical isomerism basics"] } },
-      { name: "Day 18", date: "Thu Jun 5", tasks: { m: ["Probability: conditional probability", "Multiplication theorem", "Bayes theorem with examples"], p: ["Wave Optics: Huygens' principle", "Interference: Young's double slit experiment", "Fringe width formula and problems"], c: ["Reaction mechanisms: homolytic/heterolytic fission", "Electrophiles and nucleophiles", "Inductive and mesomeric effects"] } },
-      { name: "Day 19", date: "Fri Jun 6", tasks: { m: ["Probability distributions: Binomial", "Mean and variance of distribution", "10 probability problems"], p: ["Diffraction and polarization", "Single slit diffraction pattern", "Polarization by reflection, Brewster's law"], c: ["Hydrocarbons: alkanes — preparation and reactions", "Free radical substitution mechanism", "Conformations of ethane"] } },
-      { name: "Day 20", date: "Sat Jun 7", tasks: { m: ["Linear Programming: formulation of LPP", "Graphical method of solving", "Corner point method"], p: ["Dual Nature: photoelectric effect", "Einstein's equation and work function", "De Broglie wavelength"], c: ["Alkenes: preparation, addition reactions", "Markovnikov's rule and anti-Markovnikov", "Ozonolysis and oxidation"] } },
-      { name: "Day 21 — REVIEW", date: "Sun Jun 8", tasks: { m: ["Revise 3D geometry key formulas", "Redo Probability problems", "Mixed Calculus practice"], p: ["All Optics formulas on one page", "Photoelectric effect self-quiz", "5 optics numericals timed"], c: ["Organic reactions summary table", "Nomenclature self-test: name 15 compounds", "Weekly notes review"] } }
+    title:"WEEK 3", focus:"Push harder — Optics, 3D Geometry, Organic Chemistry",
+    topics:{m:["3D Geometry direction cosines","Equation of line in 3D","Planes in 3D","Probability and conditional probability","Bayes theorem","Linear Programming"],p:["Ray Optics reflection refraction","Lens formula and power","Optical instruments","Wave Optics interference","Diffraction and polarization","Dual Nature photoelectric effect"],c:["Organic Chemistry nomenclature","IUPAC naming","Isomerism","Reaction mechanisms","Inductive effect","Hydrocarbons alkanes alkenes alkynes"]},
+    days:[
+      {name:"Day 15",date:"Mon Jun 2",tasks:{m:["3D Geometry: direction cosines and ratios","Equation of a line in 3D","Angle between two lines"],p:["Ray Optics: reflection at curved surfaces","Mirror formula and magnification","10 mirror numericals"],c:["Organic Chemistry: tetravalency of carbon","Hybridization in organic compounds","IUPAC nomenclature basics"]}},
+      {name:"Day 16",date:"Tue Jun 3",tasks:{m:["Plane in 3D: equation forms","Distance of point from plane","Angle between line and plane"],p:["Refraction: Snell's law, critical angle, TIR","Refraction at spherical surfaces","Lens formula and power"],c:["IUPAC: alkanes, alkenes, alkynes naming","Functional groups naming","Practice 20 naming problems"]}},
+      {name:"Day 17",date:"Wed Jun 4",tasks:{m:["3D problems: NCERT examples","Skew lines and shortest distance","Practice 10 problems"],p:["Optical instruments: microscope, telescope","Resolving power and magnifying power","Numerical problems"],c:["Isomerism: structural and stereoisomerism","Geometric isomerism cis/trans","Optical isomerism basics"]}},
+      {name:"Day 18",date:"Thu Jun 5",tasks:{m:["Probability: conditional probability","Multiplication theorem","Bayes theorem with examples"],p:["Wave Optics: Huygens' principle","Interference: Young's double slit experiment","Fringe width formula and problems"],c:["Reaction mechanisms: homolytic/heterolytic","Electrophiles and nucleophiles","Inductive and mesomeric effects"]}},
+      {name:"Day 19",date:"Fri Jun 6",tasks:{m:["Probability distributions: Binomial","Mean and variance of distribution","10 probability problems"],p:["Diffraction and polarization","Single slit diffraction pattern","Polarization by reflection, Brewster's law"],c:["Hydrocarbons: alkanes preparation and reactions","Free radical substitution mechanism","Conformations of ethane"]}},
+      {name:"Day 20",date:"Sat Jun 7",tasks:{m:["Linear Programming: formulation of LPP","Graphical method of solving","Corner point method"],p:["Dual Nature: photoelectric effect","Einstein's equation and work function","De Broglie wavelength"],c:["Alkenes: preparation, addition reactions","Markovnikov's rule","Ozonolysis and oxidation"]}},
+      {name:"Day 21 — REVIEW",date:"Sun Jun 8",isReview:true,tasks:{m:["Revise 3D geometry key formulas","Redo Probability problems","Mixed Calculus practice"],p:["All Optics formulas on one page","Photoelectric effect self-quiz","5 optics numericals timed"],c:["Organic reactions summary table","Nomenclature self-test: name 15 compounds","Weekly notes review"]}}
     ]
   },
   {
-    title: "WEEK 4",
-    focus: "Consolidate — Atoms, Nuclei, Mixed Practice",
-    days: [
-      { name: "Day 22", date: "Mon Jun 9", tasks: { m: ["Full Calculus revision: derivatives to DEs", "Attempt 20 mixed calculus problems", "Time yourself: 20 problems in 40 mins"], p: ["Atoms: Rutherford and Bohr model", "Hydrogen spectrum and energy levels", "Numericals on Bohr's model"], c: ["Alkynes: preparation and reactions", "Acidic nature of terminal alkynes", "Comparison: alkane vs alkene vs alkyne"] } },
-      { name: "Day 23", date: "Tue Jun 10", tasks: { m: ["Relations, Functions & ITF revision", "Matrices and Determinants full practice", "Solve 15 problems from these units"], p: ["Nuclei: nuclear structure, isotopes", "Mass defect and binding energy", "Nuclear fission and fusion"], c: ["Aromatic compounds: benzene structure", "Aromaticity: Hückel's rule", "Electrophilic aromatic substitution"] } },
-      { name: "Day 24", date: "Wed Jun 11", tasks: { m: ["Algebra: full Matrices & Determinants test", "Solve a 30-mark algebra mock", "Review all mistakes thoroughly"], p: ["Semiconductor Electronics: energy bands", "p-n junction diode and characteristics", "Forward and reverse bias"], c: ["Halogenation, nitration, sulfonation of benzene", "Friedel-Crafts alkylation/acylation", "Directing effects of substituents"] } },
-      { name: "Day 25", date: "Thu Jun 12", tasks: { m: ["Vectors & 3D: full chapter revision", "14-mark mock on Vectors & 3D", "Correct and note weak areas"], p: ["Transistor: types and working", "Common emitter configuration", "Logic gates: AND, OR, NOT, NAND, NOR"], c: ["Full organic chemistry reaction summary", "Mechanism questions practice", "20 organic reactions from memory"] } },
-      { name: "Day 26", date: "Fri Jun 13", tasks: { m: ["Probability & Linear Programming revision", "Solve past paper questions on these", "8+5 mark targeted practice"], p: ["Full Physics Unit 8 & 9 revision", "Atoms and Nuclei formula sheet", "10 mixed problems timed"], c: ["Full Hydrocarbons summary", "Comparison table: alkanes/alkenes/alkynes/arenes", "30 naming + reaction problems"] } },
-      { name: "Day 27", date: "Sat Jun 14", tasks: { m: ["First full Maths mock paper (80 marks, 3 hrs)", "Strict exam conditions", "Mark it and note every mistake"], p: ["First full Physics mock (70 marks, 3 hrs)", "Strict exam conditions", "Mark and analyze errors"], c: ["First full Chemistry mock (70 marks, 3 hrs)", "Strict exam conditions", "Mark and analyze errors"] } },
-      { name: "Day 28 — MOCK ANALYSIS", date: "Sun Jun 15", tasks: { m: ["Analyze every wrong Maths answer", "List weak topics from mock", "Re-study top 3 weak areas"], p: ["Analyze every wrong Physics answer", "List weak topics from mock", "Re-study top 3 weak areas"], c: ["Analyze every wrong Chemistry answer", "List weak topics from mock", "Re-study top 3 weak areas"] } }
+    title:"WEEK 4", focus:"Consolidate — Atoms, Nuclei, Full Mock Papers",
+    topics:{m:["Full Calculus revision","Relations Functions revision","Matrices Determinants practice","Vectors 3D revision","Probability Linear Programming"],p:["Atoms Rutherford Bohr model","Hydrogen spectrum energy levels","Nuclear structure isotopes","Mass defect binding energy","Semiconductor Electronics","Logic gates"],c:["Aromatic compounds benzene","Aromaticity Hückel's rule","Electrophilic aromatic substitution","Halogenation nitration","Friedel-Crafts reactions","Full organic revision"]},
+    days:[
+      {name:"Day 22",date:"Mon Jun 9",tasks:{m:["Full Calculus revision: derivatives to DEs","20 mixed calculus problems timed","20 problems in 40 mins challenge"],p:["Atoms: Rutherford and Bohr model","Hydrogen spectrum and energy levels","Numericals on Bohr's model"],c:["Alkynes: preparation and reactions","Acidic nature of terminal alkynes","Compare alkane vs alkene vs alkyne"]}},
+      {name:"Day 23",date:"Tue Jun 10",tasks:{m:["Relations, Functions & ITF revision","Matrices and Determinants full practice","Solve 15 problems from these units"],p:["Nuclei: nuclear structure, isotopes","Mass defect and binding energy","Nuclear fission and fusion"],c:["Aromatic compounds: benzene structure","Aromaticity: Hückel's rule","Electrophilic aromatic substitution"]}},
+      {name:"Day 24",date:"Wed Jun 11",tasks:{m:["Full Matrices & Determinants test","Solve a 30-mark algebra mock","Review all mistakes thoroughly"],p:["Semiconductor Electronics: energy bands","p-n junction diode and characteristics","Forward and reverse bias"],c:["Halogenation, nitration, sulfonation of benzene","Friedel-Crafts alkylation/acylation","Directing effects of substituents"]}},
+      {name:"Day 25",date:"Thu Jun 12",tasks:{m:["Vectors & 3D: full chapter revision","14-mark mock on Vectors & 3D","Correct and note weak areas"],p:["Transistor: types and working","Common emitter configuration","Logic gates: AND, OR, NOT, NAND, NOR"],c:["Full organic chemistry reaction summary","Mechanism questions practice","20 organic reactions from memory"]}},
+      {name:"Day 26",date:"Fri Jun 13",tasks:{m:["Probability & Linear Programming revision","Solve past paper questions on these","8+5 mark targeted practice"],p:["Full Physics Unit 8 & 9 revision","Atoms and Nuclei formula sheet","10 mixed problems timed"],c:["Full Hydrocarbons summary","Comparison table: alkanes/alkenes/alkynes/arenes","30 naming + reaction problems"]}},
+      {name:"Day 27",date:"Sat Jun 14",tasks:{m:["First full Maths mock paper (80 marks, 3 hrs)","Strict exam conditions","Mark it and note every mistake"],p:["First full Physics mock (70 marks, 3 hrs)","Strict exam conditions","Mark and analyze errors"],c:["First full Chemistry mock (70 marks, 3 hrs)","Strict exam conditions","Mark and analyze errors"]}},
+      {name:"Day 28 — REVIEW",date:"Sun Jun 15",isReview:true,tasks:{m:["Analyze every wrong Maths answer","List weak topics from mock","Re-study top 3 weak areas"],p:["Analyze every wrong Physics answer","List weak topics from mock","Re-study top 3 weak areas"],c:["Analyze every wrong Chemistry answer","List weak topics from mock","Re-study top 3 weak areas"]}}
     ]
   },
   {
-    title: "WEEK 5",
-    focus: "Past Papers — Speed + Accuracy Training",
-    days: [
-      { name: "Day 29", date: "Mon Jun 16", tasks: { m: ["CBSE 2024 Maths past paper (timed)", "Identify pattern of frequent questions", "Revise those specific question types"], p: ["CBSE 2024 Physics past paper (timed)", "Note which chapters repeat most", "Revise those chapters briefly"], c: ["CBSE 2024 Chemistry past paper (timed)", "Analyze marks distribution vs your answers", "Plug the gaps"] } },
-      { name: "Day 30", date: "Tue Jun 17", tasks: { m: ["Target practice: 35-mark Calculus block", "Do only calculus questions for 1.5 hrs", "Aim for 90%+ accuracy"], p: ["Target practice: Optics 18-mark block", "All optics problems under time pressure", "Review formulas after"], c: ["Target: Organic Chem 21-mark block", "All organic questions in 1 hr", "Reaction mechanisms focus"] } },
-      { name: "Day 31", date: "Wed Jun 18", tasks: { m: ["CBSE 2023 Maths paper timed", "Compare score with Week 4 mock", "Track improvement"], p: ["CBSE 2023 Physics paper timed", "Compare and track", "Weak unit extra practice"], c: ["CBSE 2023 Chemistry paper timed", "Track improvement from mock 1", "Revisit weak chapters"] } },
-      { name: "Day 32", date: "Thu Jun 19", tasks: { m: ["Error log review: top 5 repeating mistakes", "Drill those specific problem types", "20 problems targeting weak spots"], p: ["Physics error log: top mistakes", "Conceptual clarity session for weak topics", "10 targeted problems"], c: ["Chemistry error log: top mistakes", "Reactions you keep forgetting — flashcards", "Self test: 15 reaction questions"] } },
-      { name: "Day 33", date: "Fri Jun 20", tasks: { m: ["Full mock 3: Maths (80 marks, 3 hrs)", "Beat your previous score target", "Analyze immediately after"], p: ["Full mock 3: Physics (70 marks, 3 hrs)", "Beat previous score", "Analyze immediately"], c: ["Full mock 3: Chemistry (70 marks, 3 hrs)", "Beat previous score", "Analyze immediately"] } },
-      { name: "Day 34", date: "Sat Jun 21", tasks: { m: ["Speed drills: 40 MCQ-style questions in 30 mins", "Formula recall test: write from memory", "Stepwise solution practice for long questions"], p: ["Derivation practice: 10 key derivations", "Write them without referring notes", "Diagram accuracy check"], c: ["Name 25 organic compounds from structures", "Write 15 reactions from memory", "Numerical problems: mole concept & equilibrium"] } },
-      { name: "Day 35 — REST & LIGHT", date: "Sun Jun 22", tasks: { m: ["Light revision only: skim notes", "No new practice problems today", "Sleep early"], p: ["Light revision: formula sheet skim", "Rest your brain", "Good food and hydration"], c: ["Light revision: organic summary table", "Mental rest day", "Prep for final 3 weeks"] } }
+    title:"WEEK 5", focus:"Past Papers — Speed & Accuracy Training",
+    topics:{m:["CBSE past paper practice","Calculus 35-mark block","Targeted weak spot drilling","Speed and accuracy training","Error log analysis"],p:["CBSE past paper practice","Optics 18-mark block","Physics error analysis","Derivation practice","Diagram accuracy"],c:["CBSE past paper practice","Organic Chem 21-mark block","Reaction speed tests","Error log analysis","Flashcard revision"]},
+    days:[
+      {name:"Day 29",date:"Mon Jun 16",tasks:{m:["CBSE 2024 Maths past paper timed","Identify pattern of frequent questions","Revise those specific question types"],p:["CBSE 2024 Physics past paper timed","Note which chapters repeat most","Revise those chapters briefly"],c:["CBSE 2024 Chemistry past paper timed","Analyze marks distribution","Plug the gaps"]}},
+      {name:"Day 30",date:"Tue Jun 17",tasks:{m:["Target practice: 35-mark Calculus block","Only calculus questions for 1.5 hrs","Aim for 90%+ accuracy"],p:["Target practice: Optics 18-mark block","All optics problems under time pressure","Review formulas after"],c:["Target: Organic Chem 21-mark block","All organic questions in 1 hr","Reaction mechanisms focus"]}},
+      {name:"Day 31",date:"Wed Jun 18",tasks:{m:["CBSE 2023 Maths paper timed","Compare score with Week 4 mock","Track improvement"],p:["CBSE 2023 Physics paper timed","Compare and track improvement","Weak unit extra practice"],c:["CBSE 2023 Chemistry paper timed","Track improvement from mock 1","Revisit weak chapters"]}},
+      {name:"Day 32",date:"Thu Jun 19",tasks:{m:["Error log: top 5 repeating mistakes","Drill those specific problem types","20 problems targeting weak spots"],p:["Physics error log: top mistakes","Conceptual clarity for weak topics","10 targeted problems"],c:["Chemistry error log: top mistakes","Reactions you keep forgetting — flashcards","Self test: 15 reaction questions"]}},
+      {name:"Day 33",date:"Fri Jun 20",tasks:{m:["Full mock 3: Maths (80 marks, 3 hrs)","Beat your previous score","Analyze immediately after"],p:["Full mock 3: Physics (70 marks, 3 hrs)","Beat previous score","Analyze immediately"],c:["Full mock 3: Chemistry (70 marks, 3 hrs)","Beat previous score","Analyze immediately"]}},
+      {name:"Day 34",date:"Sat Jun 21",tasks:{m:["Speed drills: 40 problems in 30 mins","Formula recall test from memory","Stepwise solution practice"],p:["Derivation practice: 10 key derivations","Write without referring notes","Diagram accuracy check"],c:["Name 25 organic compounds from structures","Write 15 reactions from memory","Numerical: mole concept & equilibrium"]}},
+      {name:"Day 35 — REVIEW",date:"Sun Jun 22",isReview:true,tasks:{m:["Light revision only: skim notes","No new practice problems today","Sleep early"],p:["Light revision: formula sheet skim","Rest your brain","Good food and hydration"],c:["Light revision: organic summary table","Mental rest day","Prep for final 3 weeks"]}}
     ]
   },
   {
-    title: "WEEK 6",
-    focus: "Targeted Weak Spot Destruction",
-    days: [
-      { name: "Day 36", date: "Mon Jun 23", tasks: { m: ["Focus on your lowest-scoring Maths topic", "3 hrs of pure targeted drilling", "Aim to fully master it today"], p: ["Focus on your lowest-scoring Physics topic", "Concept + numericals", "Don't leave it until tomorrow"], c: ["Focus on lowest Chemistry topic", "Reactions + theory + problems", "Nail it completely"] } },
-      { name: "Day 37", date: "Tue Jun 24", tasks: { m: ["Second weakest Maths topic", "NCERT + past paper questions on it", "100 marks mindset practice"], p: ["Second weakest Physics topic", "Full deep dive", "Past paper questions only for this topic"], c: ["Second weakest Chemistry topic", "Conceptual clarity first, then problems", "Write from memory"] } },
-      { name: "Day 38", date: "Wed Jun 25", tasks: { m: ["Full mock 4 under exam conditions", "3 hrs, no breaks, timed strictly", "Goal: 70+/80"], p: ["Full mock 4 Physics", "Goal: 60+/70", "Strict timing"], c: ["Full mock 4 Chemistry", "Goal: 60+/70", "Strict timing"] } },
-      { name: "Day 39", date: "Thu Jun 26", tasks: { m: ["Mock 4 analysis: chapter-level breakdown", "Quantify: how many marks lost per unit", "Attack top 2 units with most losses"], p: ["Mock 4 analysis", "Conceptual errors vs calculation errors", "Fix each category differently"], c: ["Mock 4 analysis", "List reactions you missed", "Rewrite them 3x each"] } },
-      { name: "Day 40", date: "Fri Jun 27", tasks: { m: ["Important questions: 5 marks questions only", "Practice presenting steps clearly", "Examiner reads steps — show your work"], p: ["Derivation mastery: write 5 key derivations perfectly", "Diagram labeling practice", "Numerical presentation format"], c: ["Long answer questions: mechanism writing", "Equation balancing speed test", "Definition writing practice"] } },
-      { name: "Day 41", date: "Sat Jun 28", tasks: { m: ["Full mock 5: timed, strict", "Target: 75+/80", "Analyze after"], p: ["Full mock 5: Physics", "Target: 65+/70", "Analyze immediately"], c: ["Full mock 5: Chemistry", "Target: 65+/70", "Analyze immediately"] } },
-      { name: "Day 42 — REVIEW", date: "Sun Jun 29", tasks: { m: ["Week 6 performance review", "Track progress across all 5 mocks", "Adjust final week plan"], p: ["Compare mock scores: are you improving?", "Last conceptual gaps list", "Rest evening"], c: ["Remaining weak reactions list", "Final organic summary update", "Rest and recover"] } }
+    title:"WEEK 6", focus:"Targeted Weak Spot Destruction",
+    topics:{m:["Weakest Maths topic deep dive","Second weakest topic drilling","Mock paper 4","Presentation quality practice","5 marks question technique"],p:["Weakest Physics topic deep dive","Derivation mastery","Mock paper 4","Diagram perfection","Numerical presentation"],c:["Weakest Chemistry topic deep dive","Reaction writing accuracy","Mock paper 4","Long answer practice","Equation balancing speed"]},
+    days:[
+      {name:"Day 36",date:"Mon Jun 23",tasks:{m:["Focus on your lowest-scoring Maths topic","3 hrs of pure targeted drilling","Fully master it today"],p:["Focus on lowest-scoring Physics topic","Concept + numericals","Don't leave it until tomorrow"],c:["Focus on lowest Chemistry topic","Reactions + theory + problems","Nail it completely"]}},
+      {name:"Day 37",date:"Tue Jun 24",tasks:{m:["Second weakest Maths topic","NCERT + past paper questions on it","100 marks mindset"],p:["Second weakest Physics topic","Full deep dive","Past paper questions only"],c:["Second weakest Chemistry topic","Conceptual clarity first then problems","Write from memory"]}},
+      {name:"Day 38",date:"Wed Jun 25",tasks:{m:["Full mock 4: Maths (80 marks, 3 hrs)","No phone, no breaks, strict","Goal: 70+/80"],p:["Full mock 4: Physics","Goal: 60+/70","Strict timing"],c:["Full mock 4: Chemistry","Goal: 60+/70","Strict timing"]}},
+      {name:"Day 39",date:"Thu Jun 26",tasks:{m:["Mock 4 analysis: chapter-level breakdown","How many marks lost per unit?","Attack top 2 units with most losses"],p:["Mock 4 analysis","Conceptual errors vs calculation errors","Fix each category differently"],c:["Mock 4 analysis","List reactions you missed","Rewrite them 3x each"]}},
+      {name:"Day 40",date:"Fri Jun 27",tasks:{m:["Important 5-mark questions practice","Practice presenting steps clearly","Examiner reads steps — show your work"],p:["Derivation mastery: 5 key derivations perfectly","Diagram labeling practice","Numerical presentation format"],c:["Long answer: mechanism writing","Equation balancing speed test","Definition writing practice"]}},
+      {name:"Day 41",date:"Sat Jun 28",tasks:{m:["Full mock 5: Maths","Target: 75+/80","Analyze after"],p:["Full mock 5: Physics","Target: 65+/70","Analyze immediately"],c:["Full mock 5: Chemistry","Target: 65+/70","Analyze immediately"]}},
+      {name:"Day 42 — REVIEW",date:"Sun Jun 29",isReview:true,tasks:{m:["Week 6 performance review","Track progress across all mocks","Adjust final week plan"],p:["Compare mock scores: improving?","Last conceptual gaps list","Rest evening"],c:["Remaining weak reactions list","Final organic summary update","Rest and recover"]}}
     ]
   },
   {
-    title: "WEEK 7",
-    focus: "Peak Performance — Polish Everything",
-    days: [
-      { name: "Day 43", date: "Mon Jun 30", tasks: { m: ["Formula sheet final version: all units", "Memory test: write without looking", "Only practise, no new learning"], p: ["All physics formulas final sheet", "Derivations list: know which ones come", "5 past paper questions per unit"], c: ["All reactions: final master list", "Organic mechanisms: write from scratch", "Inorganic definitions final pass"] } },
-      { name: "Day 44", date: "Tue Jul 1", tasks: { m: ["Full mock 6 under real conditions", "No phone, no breaks, 3 hrs flat", "Target: 78+/80"], p: ["Full mock 6 Physics", "Target: 68+/70", "Exam day simulation"], c: ["Full mock 6 Chemistry", "Target: 68+/70", "Exam simulation"] } },
-      { name: "Day 45", date: "Wed Jul 2", tasks: { m: ["Mock 6 analysis: only 2 hrs max", "Fix the remaining gaps fast", "High-value questions only"], p: ["Mock analysis + fix", "Time allocation practice", "Which questions to attempt first?"], c: ["Mock analysis + fix", "Last remaining reactions", "Speed of answering practice"] } },
-      { name: "Day 46", date: "Thu Jul 3", tasks: { m: ["Speed test: complete one unit in 30 mins", "Presentation quality check", "Are steps clear and readable?"], p: ["Diagram perfection: draw all diagrams clearly", "Ray diagrams, circuit diagrams", "Label accuracy"], c: ["Equation writing accuracy test", "Balancing speed test: 20 equations in 10 mins", "Structural formula drawing practice"] } },
-      { name: "Day 47", date: "Fri Jul 4", tasks: { m: ["Final weak areas only: targeted 2 hrs", "Then light revision rest of day", "No new topics under any circumstances"], p: ["Final concepts revision: 2 hrs targeted", "Then formula sheet revision only", "Rest evening"], c: ["Final reactions revision: 2 hrs", "Then rest", "Sleep by 10pm"] } },
-      { name: "Day 48", date: "Sat Jul 5", tasks: { m: ["Maths: only skim formula sheet", "Do 5 easy confidence-building problems", "Stop at noon"], p: ["Physics: formula sheet only", "5 easy problems", "Stop studying by noon"], c: ["Chemistry: reactions list only", "No heavy practice", "Relax afternoon"] } },
-      { name: "Day 49 — PRE-EXAM REST", date: "Sun Jul 6", tasks: { m: ["NO heavy studying", "Just read your own notes lightly", "Prepare exam kit: pens, ID, calculator"], p: ["Light formula skim only", "Visualize walking into exam confidently", "Early sleep"], c: ["Light reactions skim", "No pressure today", "You've done the work — trust it"] } }
+    title:"WEEK 7", focus:"Peak Performance — Polish Everything",
+    topics:{m:["Final formula sheet all units","Memory test without notes","Mock paper 6","High value question technique","Presentation quality"],p:["All physics formulas final sheet","All derivations list","Mock paper 6","Diagram perfection","Time management"],c:["All reactions master list","Organic mechanisms from scratch","Mock paper 6","Speed of answering","Definition precision"]},
+    days:[
+      {name:"Day 43",date:"Mon Jun 30",tasks:{m:["Formula sheet final version: all units","Memory test: write without looking","Only practice, no new learning"],p:["All physics formulas final sheet","Derivations list: know which ones come","5 past paper questions per unit"],c:["All reactions: final master list","Organic mechanisms: write from scratch","Inorganic definitions final pass"]}},
+      {name:"Day 44",date:"Tue Jul 1",tasks:{m:["Full mock 6 under real conditions","No phone, no breaks, 3 hrs flat","Target: 78+/80"],p:["Full mock 6: Physics","Target: 68+/70","Exam day simulation"],c:["Full mock 6: Chemistry","Target: 68+/70","Exam simulation"]}},
+      {name:"Day 45",date:"Wed Jul 2",tasks:{m:["Mock 6 analysis: only 2 hrs max","Fix remaining gaps fast","High-value questions only"],p:["Mock analysis + fix","Time allocation practice","Which questions to attempt first?"],c:["Mock analysis + fix","Last remaining reactions","Speed of answering practice"]}},
+      {name:"Day 46",date:"Thu Jul 3",tasks:{m:["Speed test: complete one unit in 30 mins","Presentation quality check","Are steps clear and readable?"],p:["Diagram perfection: draw all diagrams clearly","Ray diagrams, circuit diagrams","Label accuracy"],c:["Equation writing accuracy test","Balancing speed test: 20 equations in 10 mins","Structural formula drawing practice"]}},
+      {name:"Day 47",date:"Fri Jul 4",tasks:{m:["Final weak areas only: 2 hrs targeted","Then light revision rest of day","No new topics at all"],p:["Final concepts revision: 2 hrs targeted","Then formula sheet revision only","Rest evening"],c:["Final reactions revision: 2 hrs","Then rest","Sleep by 10pm"]}},
+      {name:"Day 48",date:"Sat Jul 5",tasks:{m:["Only skim formula sheet","Do 5 easy confidence-building problems","Stop at noon"],p:["Formula sheet only","5 easy problems","Stop by noon"],c:["Reactions list only","No heavy practice","Relax afternoon"]}},
+      {name:"Day 49 — PRE-EXAM REST",date:"Sun Jul 6",isReview:true,tasks:{m:["NO heavy studying","Read your own notes lightly","Prepare exam kit: pens, ID, calculator"],p:["Light formula skim only","Visualize walking in confidently","Early sleep"],c:["Light reactions skim","No pressure today","You've done the work — trust it"]}}
     ]
   },
   {
-    title: "WEEK 8",
-    focus: "Final Stretch — Confidence & Rest",
-    days: [
-      { name: "Day 50", date: "Mon Jul 7", tasks: { m: ["Only your personal formula cheat sheet", "Read through once", "No practice problems today"], p: ["Formula sheet one final read", "Derivations: just visualize the steps", "Light and calm"], c: ["Reactions list: one slow read-through", "Organic mechanisms: visualize only", "Rest completely by afternoon"] } },
-      { name: "Day 51", date: "Tue Jul 8", tasks: { m: ["5 problems maximum — easy ones for confidence", "Stop if stress rises", "You know this material"], p: ["5 easy numericals for confidence", "Remind yourself of your improvement", "Calm mind"], c: ["5 easy questions only", "Confidence building", "Remind yourself how far you've come"] } },
-      { name: "Day 52", date: "Wed Jul 9", tasks: { m: ["FINAL review: notes only, no problems", "Sleep 8+ hours tonight", "Water, food, relax"], p: ["FINAL review: formula sheet", "Visualize exam going perfectly", "Rest"], c: ["FINAL review: reactions list", "All prep is done", "Trust your preparation"] } },
-      { name: "Day 53", date: "Thu Jul 10", tasks: { m: ["Total rest day", "No studying at all", "Walk, eat well, sleep early"], p: ["Total rest", "Mental recovery", "You are ready"], c: ["Total rest", "Zero study", "Recharge completely"] } },
-      { name: "Day 54", date: "Fri Jul 11", tasks: { m: ["Light formula skim: 30 mins max", "Calm and confident mindset", "Pack your exam bag tonight"], p: ["30 mins formula only", "Positive visualization", "Early bed"], c: ["30 mins reactions only", "You've prepared 8 weeks for this", "Sleep well"] } },
-      { name: "Day 55", date: "Sat Jul 12", tasks: { m: ["Complete rest — NO studying", "Eat well, hydrate, sleep 9+ hrs", "Trust the process 💪"], p: ["Complete rest", "Mental strength", "You are ready for 70/70"], c: ["Complete rest", "Trust your hard work", "Exam week starts — you've got this"] } },
-      { name: "Day 56", date: "Sun Jul 13", tasks: { m: ["Wake up calm", "Light breakfast, check your formula sheet once", "Arrive early, stay calm — 80/80 incoming ✊"], p: ["Breathe", "You trained for 8 weeks", "Walk in confident"], c: ["Exam week", "All the hard work pays off today", "100% is yours 🏆"] } }
+    title:"WEEK 8", focus:"Final Stretch — Confidence & Rest",
+    topics:{m:["Formula sheet review","Confidence building problems","Mental preparation","Trust your preparation"],p:["Formula sheet review","Visualization practice","Mental preparation","Exam strategy"],c:["Reactions list review","Confidence building","Mental preparation","Trust the process"]},
+    days:[
+      {name:"Day 50",date:"Mon Jul 7",tasks:{m:["Only your personal formula cheat sheet","Read through once","No practice problems today"],p:["Formula sheet one final read","Derivations: just visualize","Light and calm"],c:["Reactions list: one slow read-through","Organic mechanisms: visualize only","Rest completely by afternoon"]}},
+      {name:"Day 51",date:"Tue Jul 8",tasks:{m:["5 problems max — easy ones for confidence","Stop if stress rises","You know this material"],p:["5 easy numericals for confidence","Remind yourself of your improvement","Calm mind"],c:["5 easy questions only","Confidence building","Remind yourself how far you've come"]}},
+      {name:"Day 52",date:"Wed Jul 9",tasks:{m:["FINAL review: notes only, no problems","Sleep 8+ hours tonight","Water, food, relax"],p:["FINAL review: formula sheet","Visualize exam going perfectly","Rest"],c:["FINAL review: reactions list","All prep is done","Trust your preparation"]}},
+      {name:"Day 53",date:"Thu Jul 10",tasks:{m:["Total rest day","No studying at all","Walk, eat well, sleep early"],p:["Total rest","Mental recovery","You are ready"],c:["Total rest","Zero study","Recharge completely"]}},
+      {name:"Day 54",date:"Fri Jul 11",tasks:{m:["Light formula skim: 30 mins max","Calm and confident mindset","Pack your exam bag tonight"],p:["30 mins formula only","Positive visualization","Early bed"],c:["30 mins reactions only","You've prepared 8 weeks for this","Sleep well"]}},
+      {name:"Day 55",date:"Sat Jul 12",tasks:{m:["Complete rest — NO studying","Eat well, hydrate, sleep 9+ hrs","Trust the process 💪"],p:["Complete rest","Mental strength","You are ready for 70/70"],c:["Complete rest","Trust your hard work","Exam week — you've got this"]}},
+      {name:"Day 56 — EXAM WEEK",date:"Sun Jul 13",isReview:true,tasks:{m:["Wake up calm","Light breakfast, formula sheet once","Arrive early — 80/80 incoming ✊"],p:["Breathe","You trained 8 weeks","Walk in confident"],c:["Exam week","All the hard work pays off","100% is yours 🏆"]}}
     ]
   }
 ];
@@ -689,204 +377,356 @@ const weeks = [
 // ============================================================
 // STATE
 // ============================================================
-let state = JSON.parse(localStorage.getItem('examgrind') || '{}');
-
-function save() { localStorage.setItem('examgrind', JSON.stringify(state)); }
-
-function getKey(week, day, subj, task) { return `w${week}_d${day}_${subj}_t${task}`; }
-function getDayKey(week, day) { return `w${week}_d${day}_done`; }
-function getNoteKey(week, day) { return `w${week}_d${day}_note`; }
+let state = {};
+try { state = JSON.parse(localStorage.getItem('examgrind_v2') || '{}'); } catch(e) { state = {}; }
+function save() { try { localStorage.setItem('examgrind_v2', JSON.stringify(state)); } catch(e){} }
+const gk = (w,d,s,t) => `w${w}_d${d}_${s}_t${t}`;
+const dk = (w,d) => `w${w}_d${d}_done`;
+const nk = (w,d) => `w${w}_d${d}_note`;
+const qk = (w) => `w${w}_quiz`;
 
 // ============================================================
 // COUNTDOWN
 // ============================================================
 function updateCountdown() {
-  const now = new Date();
-  const diff = EXAM_DATE - now;
-  if (diff <= 0) { document.getElementById('countdown-text').textContent = 'EXAM DAY!'; return; }
-  const days = Math.floor(diff / 86400000);
-  const hrs = Math.floor((diff % 86400000) / 3600000);
-  document.getElementById('countdown-text').textContent = `${days}d ${hrs}h to Exam`;
+  const diff = EXAM_DATE - new Date();
+  if(diff <= 0) { document.getElementById('countdown-text').textContent = 'EXAM DAY! 🔥'; return; }
+  const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
+  document.getElementById('countdown-text').textContent = `${d}d ${h}h to Exam`;
 }
 
 // ============================================================
 // STATS
 // ============================================================
 function calcStats() {
-  let total = 0, done = 0;
-  let mTotal = 0, mDone = 0;
-  let pTotal = 0, pDone = 0;
-  let cTotal = 0, cDone = 0;
-  let daysDone = 0, totalDays = 0;
-
-  weeks.forEach((w, wi) => {
-    w.days.forEach((d, di) => {
-      totalDays++;
-      if (state[getDayKey(wi, di)]) daysDone++;
-      ['m','p','c'].forEach(subj => {
-        const tasks = d.tasks[subj] || [];
-        tasks.forEach((_, ti) => {
-          total++;
-          if (subj === 'm') mTotal++;
-          if (subj === 'p') pTotal++;
-          if (subj === 'c') cTotal++;
-          if (state[getKey(wi, di, subj, ti)]) {
-            done++;
-            if (subj === 'm') mDone++;
-            if (subj === 'p') pDone++;
-            if (subj === 'c') cDone++;
-          }
-        });
-      });
-    });
-  });
-
-  const pct = v => Math.round(v * 100) + '%';
-  document.getElementById('maths-pct').textContent = pct(mTotal ? mDone/mTotal : 0);
-  document.getElementById('physics-pct').textContent = pct(pTotal ? pDone/pTotal : 0);
-  document.getElementById('chem-pct').textContent = pct(cTotal ? cDone/cTotal : 0);
-  document.getElementById('overall-pct').textContent = `${daysDone}/${totalDays}`;
-  const totalPct = total ? Math.round(done/total*100) : 0;
-  document.getElementById('total-pct').textContent = totalPct + '%';
-  document.getElementById('total-bar').style.width = totalPct + '%';
+  let tot=0,done=0,mT=0,mD=0,pT=0,pD=0,cT=0,cD=0,daysDone=0;
+  weeks.forEach((w,wi)=>w.days.forEach((d,di)=>{
+    if(state[dk(wi,di)]) daysDone++;
+    ['m','p','c'].forEach(s=>(d.tasks[s]||[]).forEach((_,ti)=>{
+      tot++; if(s==='m')mT++; if(s==='p')pT++; if(s==='c')cT++;
+      if(state[gk(wi,di,s,ti)]){done++;if(s==='m')mD++;if(s==='p')pD++;if(s==='c')cD++;}
+    }));
+  }));
+  const pct=v=>Math.round(v*100)+'%';
+  document.getElementById('maths-pct').textContent = pct(mT?mD/mT:0);
+  document.getElementById('physics-pct').textContent = pct(pT?pD/pT:0);
+  document.getElementById('chem-pct').textContent = pct(cT?cD/cT:0);
+  document.getElementById('overall-pct').textContent = `${daysDone}/56`;
+  const tp = tot?Math.round(done/tot*100):0;
+  document.getElementById('total-pct').textContent = tp+'%';
+  document.getElementById('total-bar').style.width = tp+'%';
 }
 
 // ============================================================
 // RENDER
 // ============================================================
-const colors = { m: 'var(--maths)', p: 'var(--physics)', c: 'var(--chem)' };
-const labels = { m: 'MATHS', p: 'PHYSICS', c: 'CHEMISTRY' };
+const LABELS = {m:'MATHS',p:'PHYSICS',c:'CHEMISTRY'};
+let currentWeek = 0;
 
-function isToday(dateStr) {
-  const today = new Date();
-  const d = new Date(dateStr + ' 2026');
-  return d.toDateString() === today.toDateString();
+function isToday(ds) {
+  const parts = ds.split(' ');
+  const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+  const d = new Date(2026, months[parts[1]], parseInt(parts[2]));
+  const t = new Date(); t.setHours(0,0,0,0);
+  return d.getTime() === t.getTime();
 }
 
 function renderWeek(wi) {
   const w = weeks[wi];
-  let html = `
-    <div class="motive-bar">
-      <strong>Week ${wi+1} Focus:</strong> ${w.focus}
-    </div>
-    <div class="week-header">
-      <div>
-        <div class="week-title">${w.title}</div>
-        <div class="week-focus">${w.days[0].date} — ${w.days[w.days.length-1].date}</div>
-      </div>
-    </div>
-    <div class="days-grid">
-  `;
+  let html = `<div class="motive-bar"><strong>Week ${wi+1} Focus:</strong> ${w.focus}</div><div class="days-grid">`;
+  w.days.forEach((d,di)=>{
+    const done = state[dk(wi,di)];
+    const today = isToday(d.date);
+    const note = state[nk(wi,di)]||'';
+    const allKeys = ['m','p','c'].flatMap(s=>(d.tasks[s]||[]).map((_,ti)=>gk(wi,di,s,ti)));
+    const doneCount = allKeys.filter(k=>state[k]).length;
+    const isReview = d.isReview;
+    const prevAttempts = (state[qk(wi)]||[]);
 
-  w.days.forEach((d, di) => {
-    const dayDone = state[getDayKey(wi, di)];
-    const todayFlag = isToday(d.date);
-    const note = state[getNoteKey(wi, di)] || '';
-    const allTasks = ['m','p','c'].flatMap(s => (d.tasks[s]||[]).map((_,ti) => getKey(wi,di,s,ti)));
-    const doneCount = allTasks.filter(k => state[k]).length;
-
-    html += `
-      <div class="day-card ${dayDone?'completed':''} ${todayFlag?'today':''}" id="dc-${wi}-${di}">
-        <div class="day-header" onclick="toggleDay(${wi},${di})">
-          <div class="day-left">
-            <div class="day-num">${String(di+1+wi*7).padStart(2,'0')}</div>
-            <div class="day-info">
-              <div class="day-name">${d.name} ${todayFlag ? '<span class="today-badge">TODAY</span>' : ''}</div>
-              <div class="day-date">${d.date} &nbsp;·&nbsp; ${doneCount}/${allTasks.length} tasks</div>
-              <div class="day-subjects">
-                <span class="subj-tag m">MATHS 3.5h</span>
-                <span class="subj-tag p">PHYSICS 3h</span>
-                <span class="subj-tag c">CHEM 2.5h</span>
-              </div>
+    html += `<div class="day-card ${today?'today':''} ${isReview?'review-day':''} ${done?'completed':''}" id="dc-${wi}-${di}">
+      <div class="day-header" onclick="toggleDay(${wi},${di})">
+        <div class="day-left">
+          <div class="day-num">${String(di+1+wi*7).padStart(2,'0')}</div>
+          <div class="day-info">
+            <div class="day-name">${d.name} ${today?'<span class="today-badge">TODAY</span>':''} ${isReview?'<span class="review-badge">REVIEW + QUIZ</span>':''}</div>
+            <div class="day-date">${d.date} · ${doneCount}/${allKeys.length} tasks</div>
+            <div class="day-subjects">
+              <span class="subj-tag m">MATHS 3.5h</span>
+              <span class="subj-tag p">PHYSICS 3h</span>
+              <span class="subj-tag c">CHEM 2.5h</span>
+              ${isReview?'<span class="subj-tag quiz">AI QUIZ</span>':''}
             </div>
           </div>
-          <div class="day-actions">
-            <button class="complete-btn ${dayDone?'done':''}" onclick="toggleDayDone(event,${wi},${di})" title="Mark day complete">
-              <svg viewBox="0 0 24 24" fill="none" stroke="${dayDone?'#000':'var(--muted)'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-            </button>
-            <span class="chevron">▾</span>
-          </div>
         </div>
-        <div class="day-tasks">
-          <div class="tasks-grid">
-    `;
+        <div class="day-actions">
+          <button class="complete-btn ${done?'done':''}" onclick="toggleDone(event,${wi},${di})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="${done?'#000':'var(--muted)'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
+          <span class="chevron">▾</span>
+        </div>
+      </div>
+      <div class="day-tasks">
+        <div class="tasks-grid">`;
 
-    ['m','p','c'].forEach(subj => {
-      html += `<div class="subject-block">
-        <div class="subject-block-title ${subj}">${labels[subj]}</div>`;
-      (d.tasks[subj]||[]).forEach((task, ti) => {
-        const k = getKey(wi,di,subj,ti);
-        const checked = state[k];
-        html += `
-          <div class="task-item">
-            <input type="checkbox" class="task-check" ${checked?'checked':''} onchange="toggleTask('${k}',this)">
-            <span class="task-text ${checked?'done':''}">${task}</span>
-          </div>`;
+    ['m','p','c'].forEach(s=>{
+      html += `<div class="subject-block"><div class="subject-block-title ${s}">${LABELS[s]}</div>`;
+      (d.tasks[s]||[]).forEach((task,ti)=>{
+        const k = gk(wi,di,s,ti), chk = state[k];
+        html += `<div class="task-item">
+          <input type="checkbox" class="task-check" ${chk?'checked':''} onchange="toggleTask('${k}',this)">
+          <span class="task-text ${chk?'done':''}">${task}</span>
+        </div>`;
       });
       html += `</div>`;
     });
 
-    html += `</div>
-          <div class="day-notes">
-            <div class="notes-label">// NOTES FOR THIS DAY</div>
-            <textarea class="notes-input" placeholder="Write your notes, struggles, or wins for today..." onchange="saveNote(${wi},${di},this.value)">${note}</textarea>
-          </div>
-        </div>
-      </div>`;
-  });
+    html += `</div>`;
 
+    // QUIZ SECTION for review days
+    if(isReview) {
+      html += `<div class="quiz-section">
+        <div class="quiz-header">
+          <div>
+            <div class="quiz-title">⚡ WEEK ${wi+1} REVIEW QUIZ</div>
+            <div class="quiz-subtitle">30 AI-generated questions from what you studied this week</div>
+          </div>
+          <button class="start-quiz-btn" onclick="startQuiz(${wi})">START QUIZ →</button>
+        </div>`;
+      if(prevAttempts.length > 0) {
+        html += `<div class="quiz-history"><div class="quiz-history-title">// Previous Attempts</div>`;
+        prevAttempts.slice(-3).reverse().forEach(a=>{
+          const pct = Math.round(a.score/a.total*100);
+          html += `<div class="quiz-attempt">
+            <div><span class="attempt-score">${a.score}/${a.total}</span> <span style="font-size:0.72rem;color:var(--muted);">(${pct}%)</span></div>
+            <div class="attempt-date">${a.date}</div>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+      html += `</div>`;
+    }
+
+    html += `<div class="day-notes">
+        <div class="notes-label">// NOTES</div>
+        <textarea class="notes-input" placeholder="Write your notes, struggles, or wins..." onchange="saveNote(${wi},${di},this.value)">${note}</textarea>
+      </div>
+    </div></div>`;
+  });
   html += '</div>';
   return html;
 }
 
-function toggleDay(wi, di) {
-  const card = document.getElementById(`dc-${wi}-${di}`);
-  card.classList.toggle('open');
+function toggleDay(wi,di) {
+  const c = document.getElementById(`dc-${wi}-${di}`);
+  c.classList.toggle('open');
 }
 
-function toggleDayDone(e, wi, di) {
+function toggleDone(e,wi,di) {
   e.stopPropagation();
-  const k = getDayKey(wi, di);
-  state[k] = !state[k];
-  save();
-  renderAll();
+  state[dk(wi,di)] = !state[dk(wi,di)];
+  save(); renderAll();
 }
 
-function toggleTask(k, el) {
-  state[k] = el.checked;
-  save();
-  calcStats();
-  const label = el.nextElementSibling;
-  if (label) label.classList.toggle('done', el.checked);
+function toggleTask(k,el) {
+  state[k] = el.checked; save(); calcStats();
+  const lbl = el.nextElementSibling;
+  if(lbl) lbl.classList.toggle('done', el.checked);
 }
 
-function saveNote(wi, di, val) {
-  state[getNoteKey(wi, di)] = val;
-  save();
-}
-
-let currentWeek = 0;
+function saveNote(wi,di,val) { state[nk(wi,di)]=val; save(); }
 
 function showWeek(wi) {
   currentWeek = wi;
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===wi));
-  document.querySelectorAll('.week-panel').forEach((p,i) => p.classList.toggle('active', i===wi));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===wi));
+  document.querySelectorAll('.week-panel').forEach((p,i)=>p.classList.toggle('active',i===wi));
 }
 
 function renderAll() {
-  const container = document.getElementById('week-panels');
-  container.innerHTML = weeks.map((w,wi) => `
-    <div class="week-panel ${wi===currentWeek?'active':''}" id="wp-${wi}">
-      ${renderWeek(wi)}
-    </div>
-  `).join('');
+  // Tabs
+  document.getElementById('tabs').innerHTML = weeks.map((w,i)=>`<button class="tab ${i===currentWeek?'active':''}" onclick="showWeek(${i})">${w.title}</button>`).join('');
+  // Panels
+  document.getElementById('week-panels').innerHTML = weeks.map((w,wi)=>`<div class="week-panel ${wi===currentWeek?'active':''}" id="wp-${wi}">${renderWeek(wi)}</div>`).join('');
   calcStats();
-  // Re-attach tab logic
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    t.onclick = () => showWeek(i);
+}
+
+// ============================================================
+// QUIZ ENGINE
+// ============================================================
+let quizWeekIndex = 0;
+let quizQuestions = [];
+let quizCurrent = 0;
+let quizScore = 0;
+let quizSubScores = {Maths:0,MathsT:0,Physics:0,PhysicsT:0,Chemistry:0,ChemistryT:0};
+let quizAnswered = false;
+
+async function startQuiz(wi) {
+  quizWeekIndex = wi;
+  quizQuestions = [];
+  quizCurrent = 0;
+  quizScore = 0;
+  quizSubScores = {Maths:0,MathsT:0,Physics:0,PhysicsT:0,Chemistry:0,ChemistryT:0};
+  document.getElementById('quizModalTitle').textContent = `WEEK ${wi+1} REVIEW QUIZ`;
+  document.getElementById('quizModal').classList.add('open');
+  showLoading();
+  await generateQuestions(wi);
+}
+
+function showLoading() {
+  document.getElementById('quizContent').innerHTML = `
+    <div class="quiz-loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Generating 30 questions from Week ${quizWeekIndex+1} topics...</div>
+      <div class="loading-text" style="margin-top:8px;font-size:0.7rem;">This takes about 15 seconds ⚡</div>
+    </div>`;
+}
+
+async function generateQuestions(wi) {
+  const w = weeks[wi];
+  const topicStr = [
+    `Maths topics: ${w.topics.m.join(', ')}`,
+    `Physics topics: ${w.topics.p.join(', ')}`,
+    `Chemistry topics: ${w.topics.c.join(', ')}`
+  ].join('\n');
+
+  const prompt = `You are a CBSE Class 11/12 exam question generator. Generate exactly 30 multiple choice questions based on these topics:
+
+${topicStr}
+
+Rules:
+- 10 questions each from Maths, Physics, Chemistry
+- Each question must have exactly 4 options (A, B, C, D)
+- Mark the correct answer
+- Add a brief explanation (1-2 sentences)
+- Mix difficulty: 3 easy, 5 medium, 2 hard per subject
+- Questions must be specific and testable, not vague
+
+Respond ONLY with a JSON array. No preamble, no markdown, no backticks. Just the raw JSON array like this:
+[{"subject":"Maths","question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"correct":0,"explanation":"..."},...]
+
+correct is the 0-based index of the correct option.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:4000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.find(b=>b.type==='text')?.text || '[]';
+    const clean = text.replace(/```json|```/g,'').trim();
+    quizQuestions = JSON.parse(clean);
+    if(!Array.isArray(quizQuestions)||quizQuestions.length===0) throw new Error('bad data');
+    showQuestion();
+  } catch(err) {
+    document.getElementById('quizContent').innerHTML = `
+      <div style="text-align:center;padding:40px 0;">
+        <div style="font-size:2rem;margin-bottom:12px;">⚠️</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--muted);margin-bottom:20px;">Failed to generate questions. Check your internet and try again.</div>
+        <button class="start-quiz-btn" onclick="startQuiz(${wi})">RETRY</button>
+      </div>`;
+  }
+}
+
+function showQuestion() {
+  if(quizCurrent >= quizQuestions.length) { showResults(); return; }
+  const q = quizQuestions[quizCurrent];
+  const prog = Math.round((quizCurrent/quizQuestions.length)*100);
+  quizAnswered = false;
+
+  document.getElementById('quizContent').innerHTML = `
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${prog}%"></div></div>
+    <div class="quiz-meta">
+      <span class="quiz-subject-tag ${q.subject}">${q.subject}</span>
+      <span>${quizCurrent+1} / ${quizQuestions.length}</span>
+    </div>
+    <div class="question-text">${q.question}</div>
+    <div class="options-grid" id="optionsGrid">
+      ${q.options.map((opt,i)=>`<button class="option-btn" onclick="answerQ(${i})" id="opt-${i}">${opt}</button>`).join('')}
+    </div>
+    <div id="explanation" style="display:none"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+      <button class="next-btn" id="nextBtn" style="display:none" onclick="nextQuestion()">
+        ${quizCurrent+1 < quizQuestions.length ? 'NEXT →' : 'SEE RESULTS →'}
+      </button>
+    </div>`;
+}
+
+function answerQ(chosen) {
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const q = quizQuestions[quizCurrent];
+  const correct = q.correct;
+  const isRight = chosen === correct;
+
+  if(isRight) {
+    quizScore++;
+    quizSubScores[q.subject]++;
+  }
+  quizSubScores[q.subject+'T'] = (quizSubScores[q.subject+'T']||0)+1;
+
+  q.options.forEach((_,i)=>{
+    const btn = document.getElementById(`opt-${i}`);
+    btn.disabled = true;
+    if(i===correct) btn.classList.add(isRight&&i===chosen?'correct':'reveal');
+    else if(i===chosen&&!isRight) btn.classList.add('wrong');
   });
+
+  document.getElementById('explanation').innerHTML = `
+    <div class="explanation">
+      <strong>${isRight?'✓ Correct!':'✗ Wrong'}</strong> — ${q.explanation}
+    </div>`;
+  document.getElementById('explanation').style.display = 'block';
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function nextQuestion() { quizCurrent++; showQuestion(); }
+
+function showResults() {
+  const pct = Math.round(quizScore/quizQuestions.length*100);
+  const color = pct>=90?'var(--chem)':pct>=70?'var(--maths)':'#ff6666';
+  const msg = pct>=90?'BEAST MODE. You clearly know your stuff 🔥':
+               pct>=70?'Solid performance! Keep pushing for that 100% 💪':
+               pct>=50?'Good effort. Review the topics you missed and retake!':
+               'Needs work bro. Go back and revise those topics, then come back stronger!';
+
+  // Save attempt
+  const attempts = state[qk(quizWeekIndex)]||[];
+  attempts.push({score:quizScore,total:quizQuestions.length,date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})});
+  state[qk(quizWeekIndex)] = attempts;
+  save();
+
+  document.getElementById('quizContent').innerHTML = `
+    <div class="quiz-results">
+      <div class="result-score" style="color:${color}">${pct}%</div>
+      <div class="result-label">${quizScore} / ${quizQuestions.length} CORRECT</div>
+      <div class="result-breakdown">
+        <div class="result-sub">
+          <div class="result-sub-score m">${quizSubScores['Maths']||0}/${quizSubScores['MathsT']||0}</div>
+          <div class="result-sub-label">Maths</div>
+        </div>
+        <div class="result-sub">
+          <div class="result-sub-score p">${quizSubScores['Physics']||0}/${quizSubScores['PhysicsT']||0}</div>
+          <div class="result-sub-label">Physics</div>
+        </div>
+        <div class="result-sub">
+          <div class="result-sub-score c">${quizSubScores['Chemistry']||0}/${quizSubScores['ChemistryT']||0}</div>
+          <div class="result-sub-label">Chemistry</div>
+        </div>
+      </div>
+      <div class="result-msg">${msg}</div>
+      <button class="retake-btn" onclick="startQuiz(${quizWeekIndex})">↺ RETAKE QUIZ</button>
+      <button class="next-btn" onclick="closeQuiz()">CLOSE</button>
+    </div>`;
+
+  renderAll(); // refresh to show attempt history
+}
+
+function closeQuiz() {
+  document.getElementById('quizModal').classList.remove('open');
 }
 
 // ============================================================
@@ -894,21 +734,24 @@ function renderAll() {
 // ============================================================
 updateCountdown();
 setInterval(updateCountdown, 60000);
+
+// Find current week based on today
+let startWeek = 0;
+weeks.forEach((w,wi)=>{
+  w.days.forEach(d=>{ if(isToday(d.date)) startWeek=wi; });
+});
+currentWeek = startWeek;
 renderAll();
 
-// Auto-open today's day
-weeks.forEach((w, wi) => {
-  w.days.forEach((d, di) => {
-    if (isToday(d.date)) {
-      showWeek(wi);
-      setTimeout(() => {
-        const card = document.getElementById(`dc-${wi}-${di}`);
-        if (card) card.classList.add('open');
-        card?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+// Auto-open today
+setTimeout(()=>{
+  weeks.forEach((w,wi)=>w.days.forEach((d,di)=>{
+    if(isToday(d.date)) {
+      const c = document.getElementById(`dc-${wi}-${di}`);
+      if(c){ c.classList.add('open'); c.scrollIntoView({behavior:'smooth',block:'center'}); }
     }
-  });
-});
+  }));
+},200);
 </script>
 </body>
 </html>
